@@ -1,5 +1,5 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types/prop-types';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -20,6 +20,9 @@ import {
   RadioGroup,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {
+  LevaPanel, LevaStoreProvider, useControls, useCreateStore, useStoreContext,
+} from 'leva';
 
 const drawerWidth = 240;
 
@@ -33,6 +36,7 @@ const OptionsPanel = function ({
   const handleBackgroundChange = (e) => {
     setBackground(e.target.name);
   };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -109,18 +113,7 @@ const OptionsPanel = function ({
 
           </AccordionDetails>
         </Accordion>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>Floor</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography variant="h6">Coming soon</Typography>
-          </AccordionDetails>
-        </Accordion>
+
       </Drawer>
 
     </Box>
@@ -130,10 +123,11 @@ const OptionsPanel = function ({
 OptionsPanel.propTypes = {
   setDice: PropTypes.func.isRequired,
   setBackground: PropTypes.func.isRequired,
-  backgrounds: PropTypes.ArrayOf(PropTypes.shape({
-    img: PropTypes.String,
-    title: PropTypes.String,
-    thumb: PropTypes.String,
+  // eslint-disable-next-line react/forbid-prop-types
+  backgrounds: PropTypes.arrayOf(PropTypes.shape({
+    img: PropTypes.string,
+    title: PropTypes.string,
+    thumb: PropTypes.string,
   })).isRequired,
 };
 
