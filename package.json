@@ -1,0 +1,51 @@
+{
+  "name": "glass-transmission",
+  "version": "1.0.0",
+  "description": "Transparent glass shader with distortion and fresnel.",
+  "keywords": [
+    "plastic",
+    "glass",
+    "fresnel",
+    "transmission",
+    "transparent"
+  ],
+  "main": "src/index.js",
+  "dependencies": {
+    "@emotion/react": "^11.7.0",
+    "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.1",
+    "@mui/material": "^5.2.3",
+    "@react-spring/three": "^9.3.1",
+    "@react-three/cannon": "^4.2.0",
+    "@react-three/drei": "7.16.3",
+    "@react-three/fiber": "7.0.16",
+    "@types/three": "0.133.1",
+    "fs": "^0.0.1-security",
+    "leva": "0.9.13",
+    "path": "^0.12.7",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-scripts": "4.0.3",
+    "three": "0.131.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^19.0.2",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.27.1",
+    "eslint-plugin-react-hooks": "^4.3.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

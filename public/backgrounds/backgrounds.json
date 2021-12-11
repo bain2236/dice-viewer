@@ -1,0 +1,61 @@
+[{
+		"img": "background/1_abandoned_greenhouse.hdr",
+		"title": "Greenhouse",
+        "thumb":"background/1_abandoned_greenhouse.jpg"
+	},
+	{
+		"img": "background/2_christmas_studio_1.hdr",
+		"title": "Christmas 1",
+        "thumb":"background/2_christmas_studio_1.jpg"
+	},
+	{
+		"img": "background/3_christmas_studio_2.hdr",
+		"title": "Christmas 2",
+        "thumb":"background/3_christmas_studio_2.jpg"
+	},
+	{
+		"img": "background/4_circus_arena.hdr",
+		"title": "Circus",
+        "thumb":"background/4_circus_arena.jpg"
+	},
+	{
+		"img": "background/5_colourful_studio.hdr",
+		"title": "Colourful studio",
+        "thumb":"background/5_colourful_studio.jpg"
+	},
+	{
+		"img": "background/6_fireplace.hdr",
+		"title": "fireplace",
+        "thumb":"background/6_fireplace.jpg"
+	},
+	{
+		"img": "background/7_moonless_golf.hdr",
+		"title": "moonless golf",
+        "thumb":"background/7_moonless_golf.jpg"
+	},
+	{
+		"img": "background/8_shanghai_bund.hdr",
+		"title": "Shanghai",
+        "thumb":"background/8_shanghai_bund.jpg"
+	},
+	{
+		"img": "background/9_snowy_cemetery.hdr",
+		"title": "Snowy Cemetery",
+        "thumb":"background/9_snowy_cemetery.jpg"
+	},
+	{
+		"img": "background/10_solitude_night.hdr",
+		"title": "solitude night",
+        "thumb":"background/10_solitude_night.jpg"
+	},
+	{
+		"img": "background/11_st_fagans_interior.hdr",
+		"title": "st fagans",
+        "thumb":"background/11_st_fagans_interior.jpg"
+	},
+	{
+		"img": "background/12_epping_forest.hdr",
+		"title": "Epping Forest",
+        "thumb":"background/12_epping_forest.jpg"
+	},
+]
