@@ -1,4 +1,6 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 import {
   useGLTF,
 } from '@react-three/drei';
@@ -20,7 +22,6 @@ const Dice = function ({ type, material }) {
       geometry = nodes[type].geometry;
       symbols = nodes[`${type}symbols`].geometry;
       position = [0, 0, 0];
-      console.log(nodes);
     }
       break;
     case 'D6': {
@@ -92,12 +93,22 @@ const Dice = function ({ type, material }) {
   );
 };
 
-// useGLTF.preload('/d4.glb');
-// useGLTF.preload('/d6.glb');
-// useGLTF.preload('/d10.glb');
-// useGLTF.preload('/d8.glb');
-// useGLTF.preload('/d12.glb');
-// useGLTF.preload('/d20.glb');
-// useGLTF.preload('/d100.glb');
+useGLTF.preload('/d4.glb');
+useGLTF.preload('/d6.glb');
+useGLTF.preload('/d10.glb');
+useGLTF.preload('/d8.glb');
+useGLTF.preload('/d12.glb');
+useGLTF.preload('/d20.glb');
+useGLTF.preload('/d100.glb');
+
+Dice.propTypes = {
+  type: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  material: PropTypes.object,
+};
+
+Dice.defaultProps = {
+  material: {},
+};
 
 export default Dice;

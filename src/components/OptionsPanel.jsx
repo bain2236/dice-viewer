@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,6 +12,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Card,
+  CardActionArea,
   CardMedia,
   FormControl,
   FormControlLabel,
@@ -29,7 +31,6 @@ const OptionsPanel = function ({
   };
 
   const handleBackgroundChange = (e) => {
-    console.log(e);
     setBackground(e.target.name);
   };
   return (
@@ -92,14 +93,16 @@ const OptionsPanel = function ({
           <AccordionDetails>
             {backgrounds.map((item) => (
               <Card sx={{ maxWidth: 345 }} onClick={handleBackgroundChange}>
-                <CardMedia
-                  component="img"
-                  height="70"
-                  image={item.thumb}
-                  alt={item.title}
-                  key={item.img}
-                  name={item.img}
-                />
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="70"
+                    image={item.thumb}
+                    alt={item.title}
+                    key={item.img}
+                    name={item.img}
+                  />
+                </CardActionArea>
               </Card>
 
             ))}
@@ -122,6 +125,16 @@ const OptionsPanel = function ({
 
     </Box>
   );
+};
+
+OptionsPanel.propTypes = {
+  setDice: PropTypes.func.isRequired,
+  setBackground: PropTypes.func.isRequired,
+  backgrounds: PropTypes.ArrayOf(PropTypes.shape({
+    img: PropTypes.String,
+    title: PropTypes.String,
+    thumb: PropTypes.String,
+  })).isRequired,
 };
 
 export default OptionsPanel;

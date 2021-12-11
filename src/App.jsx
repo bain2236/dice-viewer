@@ -2,7 +2,7 @@ import React, { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Environment, Loader, OrbitControls } from '@react-three/drei';
 import { useControls } from 'leva';
-import { Physics, usePlane, useBox } from '@react-three/cannon';
+import { Physics, usePlane } from '@react-three/cannon';
 import Dice from './components/Dice';
 import OptionsPanel from './components/OptionsPanel';
 
@@ -144,6 +144,7 @@ const App = function () {
               type={dice}
               material={materialProps}
             />
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <Environment {...materialProps} files={background} />
 
           </Suspense>
