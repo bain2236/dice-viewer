@@ -6,6 +6,7 @@ import {
   useGLTF,
 } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
+import { useBox, useSphere } from '@react-three/cannon';
 
 const Dice = function ({
   diceShape, material, environment, animation,
@@ -14,8 +15,11 @@ const Dice = function ({
   let symbols;
   let walls;
   // const [group] = useBox(() => ({ mass: 1, position: [0, 5, 0] }));
-  const position = [0, 0, 0];
-  const group = useRef();
+  // const position = [0, 20, 0];
+  // const diceGroupRef = useRef();
+  const [diceGroupRef] = useBox(() => ({
+    mass: 5, position: [0, 40, 0], rotation: [0, 0, 0], args: [10, 10, 10],
+  }));
 
   switch (diceShape) {
     case 'D4': {
@@ -74,19 +78,27 @@ const Dice = function ({
 
   useFrame(() => {
     if (animation.rotate) {
-      group.current.rotation.x += animation.axis.x;
-      group.current.rotation.y += animation.axis.y;
-      group.current.rotation.z += animation.axis.z;
+      diceGroupRef.current.rotation.x += animation.axis.x;
+      diceGroupRef.current.rotation.y += animation.axis.y;
+      diceGroupRef.current.rotation.z += animation.axis.z;
     }
     return null;
   });
 
   return (
-    <group ref={group} dispose={null}>
+    <group
+      ref={diceGroupRef}
+      dispose={null}
+      castShadow
+      onClick={(e) => {
+        console.log('touch the dice');
+        e.stopPropagation();
+        diceGroupRef.current.mass = 5;
+      }}
+    >
       <mesh
         castShadow
         geometry={geometry}
-        position={position}
       >
         <meshPhysicalMaterial
           background={environment.enabled}
@@ -100,12 +112,12 @@ const Dice = function ({
           attenuationDistance={environment.enabled ? environment.attenuationDistance : null}
           color={material.color}
           wireframe={material.wireframe}
+          metalness={material.metal}
         />
       </mesh>
       <mesh
         castShadow
         geometry={symbols}
-        position={position}
       >
         <meshPhysicalMaterial
           wireframe={material.wireframe}
@@ -119,12 +131,12 @@ const Dice = function ({
           attenuationTint={environment.enabled ? environment.attenuationTint : null}
           attenuationDistance={environment.enabled ? environment.attenuationDistance : null}
           color={material.numberColor}
+          metalness={material.metal}
         />
       </mesh>
       <mesh
         castShadow
         geometry={walls}
-        position={position}
       >
         <meshPhysicalMaterial
           wireframe={material.wireframe}
@@ -138,6 +150,7 @@ const Dice = function ({
           attenuationTint={environment.enabled ? environment.attenuationTint : null}
           attenuationDistance={environment.enabled ? environment.attenuationDistance : null}
           color={material.wallColor}
+          metalness={material.metal}
         />
       </mesh>
     </group>
