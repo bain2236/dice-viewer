@@ -8,7 +8,7 @@ import {
 import { useFrame } from '@react-three/fiber';
 
 const Dice = function ({
-  dice, material, environment, animation,
+  diceShape, material, environment, animation,
 }) {
   let geometry;
   let symbols;
@@ -16,50 +16,48 @@ const Dice = function ({
   let position = [0, 0, 0];
   const group = useRef();
 
-  console.log(dice, material, environment, animation);
-
-  switch (dice.type) {
+  switch (diceShape) {
     case 'D4': {
       const { nodes } = useGLTF('/d4.glb');
-      geometry = nodes[dice.type].geometry;
-      symbols = nodes[`${dice.type}symbols`].geometry;
+      geometry = nodes[diceShape].geometry;
+      symbols = nodes[`${diceShape}symbols`].geometry;
     }
       break;
     case 'D6': {
       const { nodes } = useGLTF('/d6.glb');
-      geometry = nodes[dice.type].geometry;
-      symbols = nodes[`${dice.type}symbols`].geometry;
+      geometry = nodes[diceShape].geometry;
+      symbols = nodes[`${diceShape}symbols`].geometry;
     }
       break;
     case 'D8': {
       const { nodes } = useGLTF('/d8.glb');
-      geometry = nodes[dice.type].geometry;
-      symbols = nodes[`${dice.type}symbols`].geometry;
+      geometry = nodes[diceShape].geometry;
+      symbols = nodes[`${diceShape}symbols`].geometry;
     }
       break;
     case 'D10': {
       const { nodes } = useGLTF('/d10.glb');
-      geometry = nodes[dice.type].geometry;
-      symbols = nodes[`${dice.type}symbols`].geometry;
+      geometry = nodes[diceShape].geometry;
+      symbols = nodes[`${diceShape}symbols`].geometry;
       position = [2.52, -1.15, -24.46];
     }
       break;
     case 'D12': {
       const { nodes } = useGLTF('/d12.glb');
-      geometry = nodes[dice.type].geometry;
-      symbols = nodes[`${dice.type}symbols`].geometry;
+      geometry = nodes[diceShape].geometry;
+      symbols = nodes[`${diceShape}symbols`].geometry;
     }
       break;
     case 'D20': {
       const { nodes } = useGLTF('/d20.glb');
-      geometry = nodes[dice.type].geometry;
-      symbols = nodes[`${dice.type}symbols`].geometry;
+      geometry = nodes[diceShape].geometry;
+      symbols = nodes[`${diceShape}symbols`].geometry;
     }
       break;
     case 'D100': {
       const { nodes } = useGLTF('/d100.glb');
-      geometry = nodes[dice.type].geometry;
-      symbols = nodes[`${dice.type}symbols`].geometry;
+      geometry = nodes[diceShape].geometry;
+      symbols = nodes[`${diceShape}symbols`].geometry;
     }
       break;
 
@@ -84,7 +82,7 @@ const Dice = function ({
         position={position}
       >
         <meshPhysicalMaterial
-          background={environment.enabled ? environment.background : null}
+          background={environment.enabled}
           thickness={environment.enabled ? environment.thickness : null}
           roughness={environment.enabled ? environment.roughness : null}
           clearcoat={environment.enabled ? environment.clearcoat : null}
@@ -102,7 +100,7 @@ const Dice = function ({
         position={position}
       >
         <meshPhysicalMaterial
-          background={environment.enabled ? environment.background : null}
+          background={environment.enabled}
           thickness={environment.enabled ? environment.thickness : null}
           roughness={environment.enabled ? environment.roughness : null}
           clearcoat={environment.enabled ? environment.clearcoat : null}
@@ -127,7 +125,7 @@ useGLTF.preload('/d20.glb');
 useGLTF.preload('/d100.glb');
 
 Dice.propTypes = {
-  dice: PropTypes.object.isRequired,
+  diceShape: PropTypes.object.isRequired,
   material: PropTypes.object.isRequired,
   environment: PropTypes.object.isRequired,
   animation: PropTypes.object.isRequired,

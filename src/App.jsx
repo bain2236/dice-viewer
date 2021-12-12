@@ -1,8 +1,8 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Environment, OrbitControls } from '@react-three/drei';
+import { Environment, Loader, OrbitControls } from '@react-three/drei';
 import {
-  useControls, folder,
+  useControls, folder, buttonGroup,
 } from 'leva';
 import Dice from './components/Dice';
 
@@ -70,28 +70,22 @@ const backgrounds = [
 ];
 
 const App = function () {
-  const dice = useControls({
-    dice: folder({
-      rotate: true,
-      type: {
-        value: 'D4',
-        options: {
-          D4: 'D4',
-          D6: 'D6',
-          D8: 'D8',
-          D10: 'D10',
-          D12: 'D12',
-          D20: 'D20',
-          D100: 'D100',
-        },
-      },
+  const [diceShape, setDiceShape] = useState('D4');
+  useControls('Dice', {
+    ' ': buttonGroup({
+      D4: () => { setDiceShape('D4'); },
+      D6: () => { setDiceShape('D6'); },
+      D8: () => { setDiceShape('D8'); },
+      D10: () => { setDiceShape('D10'); },
+      D12: () => { setDiceShape('D12'); },
+      D20: () => { setDiceShape('D20'); },
+      D100: () => { setDiceShape('D100'); },
     }),
   });
 
   const environment = useControls({
     environment: folder({
       enabled: true,
-      background: true,
       backgrounds: {
         options: {
           Greenhouse: 'backgrounds/1_abandoned_greenhouse.hdr',
@@ -165,7 +159,7 @@ const App = function () {
           {/* <Plane /> */}
 
           <Dice
-            dice={dice}
+            diceShape={diceShape}
             material={material}
             environment={environment}
             animation={animation}
@@ -176,7 +170,7 @@ const App = function () {
             ? (
               <Environment
                 files={environment.enabled ? environment.backgrounds : null}
-                background={environment.enabled ? environment.background : null}
+                background={environment.enabled}
                 thickness={environment.enabled ? environment.thickness : null}
                 roughness={environment.enabled ? environment.roughness : null}
                 clearcoat={environment.enabled ? environment.clearcoat : null}
@@ -201,7 +195,7 @@ const App = function () {
 
       </Canvas>
 
-      {/* <Loader /> */}
+      <Loader />
 
     </>
   );
