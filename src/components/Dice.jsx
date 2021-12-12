@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
@@ -5,62 +6,60 @@ import {
   useGLTF,
 } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useStoreContext } from 'leva';
 
-const Dice = function () {
+const Dice = function ({
+  dice, material, environment, animation,
+}) {
   let geometry;
   let symbols;
   // const [group] = useBox(() => ({ mass: 1, position: [0, 5, 0] }));
   let position = [0, 0, 0];
   const group = useRef();
-  const store = useStoreContext();
-  const d = store.getData();
-  console.log(store);
-  console.log(d);
-  const dice = d['dice.type'];
 
-  switch (dice.value) {
+  console.log(dice, material, environment, animation);
+
+  switch (dice.type) {
     case 'D4': {
       const { nodes } = useGLTF('/d4.glb');
-      geometry = nodes[dice.value].geometry;
-      symbols = nodes[`${dice.value}symbols`].geometry;
+      geometry = nodes[dice.type].geometry;
+      symbols = nodes[`${dice.type}symbols`].geometry;
     }
       break;
     case 'D6': {
       const { nodes } = useGLTF('/d6.glb');
-      geometry = nodes[dice.value].geometry;
-      symbols = nodes[`${dice.value}symbols`].geometry;
+      geometry = nodes[dice.type].geometry;
+      symbols = nodes[`${dice.type}symbols`].geometry;
     }
       break;
     case 'D8': {
       const { nodes } = useGLTF('/d8.glb');
-      geometry = nodes[dice.value].geometry;
-      symbols = nodes[`${dice.value}symbols`].geometry;
+      geometry = nodes[dice.type].geometry;
+      symbols = nodes[`${dice.type}symbols`].geometry;
     }
       break;
     case 'D10': {
       const { nodes } = useGLTF('/d10.glb');
-      geometry = nodes[dice.value].geometry;
-      symbols = nodes[`${dice.value}symbols`].geometry;
+      geometry = nodes[dice.type].geometry;
+      symbols = nodes[`${dice.type}symbols`].geometry;
       position = [2.52, -1.15, -24.46];
     }
       break;
     case 'D12': {
       const { nodes } = useGLTF('/d12.glb');
-      geometry = nodes[dice.value].geometry;
-      symbols = nodes[`${dice.value}symbols`].geometry;
+      geometry = nodes[dice.type].geometry;
+      symbols = nodes[`${dice.type}symbols`].geometry;
     }
       break;
     case 'D20': {
       const { nodes } = useGLTF('/d20.glb');
-      geometry = nodes[dice.value].geometry;
-      symbols = nodes[`${dice.value}symbols`].geometry;
+      geometry = nodes[dice.type].geometry;
+      symbols = nodes[`${dice.type}symbols`].geometry;
     }
       break;
     case 'D100': {
       const { nodes } = useGLTF('/d100.glb');
-      geometry = nodes[dice.value].geometry;
-      symbols = nodes[`${dice.value}symbols`].geometry;
+      geometry = nodes[dice.type].geometry;
+      symbols = nodes[`${dice.type}symbols`].geometry;
     }
       break;
 
@@ -69,7 +68,7 @@ const Dice = function () {
   }
 
   useFrame(() => {
-    if (d['dice.rotate'].value) {
+    if (animation.rotate) {
       // group.current.rotation.x += 0.02;
       group.current.rotation.y += 0.01;
       // group.current.rotation.z += 0.01;
@@ -85,16 +84,16 @@ const Dice = function () {
         position={position}
       >
         <meshPhysicalMaterial
-          background={d['environment.background'].value}
-          thickness={d['environment.thickness'].value}
-          roughness={d['environment.roughness'].value}
-          clearcoat={d['environment.clearcoat'].value}
-          clearcoatRoughness={d['environment.clearcoatRoughness'].value}
-          transmission={d['environment.transmission'].value}
-          ior={d['environment.ior'].value}
-          color={d['material.color'].value}
-          attenuationTint={d['environment.attenuationTint'].value}
-          attenuationDistance={d['environment.attenuationDistance'].value}
+          background={environment.enabled ? environment.background : null}
+          thickness={environment.enabled ? environment.thickness : null}
+          roughness={environment.enabled ? environment.roughness : null}
+          clearcoat={environment.enabled ? environment.clearcoat : null}
+          clearcoatRoughness={environment.enabled ? environment.clearcoatRoughness : null}
+          transmission={environment.enabled ? environment.transmission : null}
+          ior={environment.enabled ? environment.ior : null}
+          attenuationTint={environment.enabled ? environment.attenuationTint : null}
+          attenuationDistance={environment.enabled ? environment.attenuationDistance : null}
+          color={material.color}
         />
       </mesh>
       <mesh
@@ -103,16 +102,16 @@ const Dice = function () {
         position={position}
       >
         <meshPhysicalMaterial
-          background={d['environment.background'].value}
-          thickness={d['environment.thickness'].value}
-          roughness={d['environment.roughness'].value}
-          clearcoat={d['environment.clearcoat'].value}
-          clearcoatRoughness={d['environment.clearcoatRoughness'].value}
-          transmission={d['environment.transmission'].value}
-          ior={d['environment.ior'].value}
-          color={d['material.numberColor'].value}
-          attenuationTint={d['environment.attenuationTint'].value}
-          attenuationDistance={d['environment.attenuationDistance'].value}
+          background={environment.enabled ? environment.background : null}
+          thickness={environment.enabled ? environment.thickness : null}
+          roughness={environment.enabled ? environment.roughness : null}
+          clearcoat={environment.enabled ? environment.clearcoat : null}
+          clearcoatRoughness={environment.enabled ? environment.clearcoatRoughness : null}
+          transmission={environment.enabled ? environment.transmission : null}
+          ior={environment.enabled ? environment.ior : null}
+          attenuationTint={environment.enabled ? environment.attenuationTint : null}
+          attenuationDistance={environment.enabled ? environment.attenuationDistance : null}
+          color={material.numberColor}
         />
       </mesh>
     </group>
@@ -128,13 +127,10 @@ useGLTF.preload('/d20.glb');
 useGLTF.preload('/d100.glb');
 
 Dice.propTypes = {
-  type: PropTypes.string.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  material: PropTypes.object,
-};
-
-Dice.defaultProps = {
-  material: {},
+  dice: PropTypes.object.isRequired,
+  material: PropTypes.object.isRequired,
+  environment: PropTypes.object.isRequired,
+  animation: PropTypes.object.isRequired,
 };
 
 export default Dice;

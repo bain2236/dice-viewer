@@ -1,15 +1,10 @@
 import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Loader, OrbitControls } from '@react-three/drei';
+import { Environment, OrbitControls } from '@react-three/drei';
 import {
-  LevaPanel,
-  LevaStoreProvider, useControls, useCreateStore, folder, useStoreContext,
+  useControls, folder,
 } from 'leva';
-import {
-  AppBar, Box, CssBaseline, Drawer,
-} from '@mui/material';
 import Dice from './components/Dice';
-import Env from './components/Env';
 
 const backgrounds = [
   {
@@ -74,26 +69,8 @@ const backgrounds = [
   },
 ];
 
-const Plane = function (props) {
-  const [ref] = usePlane(() => (
-    {
-      rotation: [-Math.PI / 2, 0, 0],
-      position: [0, -20, 0],
-
-      ...props,
-    }));
-  return (
-    <mesh ref={ref} receiveShadow>
-      <planeGeometry args={[100, 100]} />
-      <meshStandardMaterial attach="material" color="#ffffff" />
-    </mesh>
-  );
-};
-
 const App = function () {
-  const store = useCreateStore();
-
-  useControls({
+  const dice = useControls({
     dice: folder({
       rotate: true,
       type: {
@@ -109,10 +86,11 @@ const App = function () {
         },
       },
     }),
-  }, { store });
+  });
 
-  useControls({
+  const environment = useControls({
     environment: folder({
+      enabled: true,
       background: true,
       backgrounds: {
         options: {
@@ -153,43 +131,22 @@ const App = function () {
       attenuationTint: '#ffe79e',
       attenuationDistance: { value: 0, min: 0, max: 1 },
     }),
-  }, { store });
+  });
 
-  useControls({
+  const material = useControls({
     material: folder({
       color: '#ffffff',
       numberColor: '#db0c0c',
     }),
-  }, { store });
+  });
 
-  const drawerWidth = 300;
-
+  const animation = useControls({
+    animation: folder({
+      rotate: true,
+    }),
+  });
   return (
     <>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar
-          position="fixed"
-          sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
-        />
-        <Drawer
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-              boxSizing: 'border-box',
-            },
-          }}
-          variant="permanent"
-          anchor="left"
-        >
-          <LevaPanel store={store} fill flat titleBar={false} />
-          {/* <LevaPanel store={materialStore} fill flat titleBar={false} /> */}
-        </Drawer>
-
-      </Box>
-
       <Canvas
         dpr={[1, 2]}
         camera={{ position: [0, 40, 50] }}
@@ -206,12 +163,39 @@ const App = function () {
         <Suspense fallback={null}>
 
           {/* <Plane /> */}
-          <LevaStoreProvider store={store}>
-            <Dice />
 
-            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-            <Env />
-          </LevaStoreProvider>
+          <Dice
+            dice={dice}
+            material={material}
+            environment={environment}
+            animation={animation}
+          />
+
+          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+          {environment.enabled
+            ? (
+              <Environment
+                files={environment.enabled ? environment.backgrounds : null}
+                background={environment.enabled ? environment.background : null}
+                thickness={environment.enabled ? environment.thickness : null}
+                roughness={environment.enabled ? environment.roughness : null}
+                clearcoat={environment.enabled ? environment.clearcoat : null}
+                clearcoatRoughness={environment.enabled ? environment.clearcoatRoughness : null}
+                transmission={environment.enabled ? environment.transmission : null}
+                ior={environment.enabled ? environment.ior : null}
+                attenuationTint={environment.enabled ? environment.attenuationTint : null}
+                attenuationDistance={environment.enabled ? environment.attenuationDistance : null}
+              />
+            )
+            : (
+              <directionalLight
+                intensity={0.5}
+                castShadow
+                shadow-mapSize-height={512}
+                shadow-mapSize-width={512}
+              />
+            )}
+
         </Suspense>
         <OrbitControls />
 
