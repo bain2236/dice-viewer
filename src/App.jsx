@@ -129,6 +129,7 @@ const App = function () {
   const material = useControls('material', {
     color: '#ffffff',
     numberColor: '#db0c0c',
+    wallColor: '#10e8c8',
     wireframe: false,
   });
 
