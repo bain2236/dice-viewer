@@ -67,9 +67,9 @@ const Dice = function ({
 
   useFrame(() => {
     if (animation.rotate) {
-      // group.current.rotation.x += 0.02;
-      group.current.rotation.y += 0.01;
-      // group.current.rotation.z += 0.01;
+      group.current.rotation.x += animation.axis.x;
+      group.current.rotation.y += animation.axis.y;
+      group.current.rotation.z += animation.axis.z;
     }
     return null;
   });
@@ -92,6 +92,7 @@ const Dice = function ({
           attenuationTint={environment.enabled ? environment.attenuationTint : null}
           attenuationDistance={environment.enabled ? environment.attenuationDistance : null}
           color={material.color}
+          wireframe={material.wireframe}
         />
       </mesh>
       <mesh
@@ -100,6 +101,7 @@ const Dice = function ({
         position={position}
       >
         <meshPhysicalMaterial
+          wireframe={material.wireframe}
           background={environment.enabled}
           thickness={environment.enabled ? environment.thickness : null}
           roughness={environment.enabled ? environment.roughness : null}
