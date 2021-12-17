@@ -12,75 +12,19 @@ import Dice from './components/Dice';
 
 softShadows();
 
-// const backgrounds = [
-//   {
-//     img: 'backgrounds/1_abandoned_greenhouse.hdr',
-//     title: 'Greenhouse',
-//     thumb: 'backgrounds/1_abandoned_greenhouse-min.jpg',
-//   },
-//   {
-//     img: 'backgrounds/2_christmas_studio_1.hdr',
-//     title: 'Christmas 1',
-//     thumb: 'backgrounds/2_christmas_studio_1-min.jpg',
-//   },
-//   {
-//     img: 'backgrounds/3_christmas_studio_2.hdr',
-//     title: 'Christmas 2',
-//     thumb: 'backgrounds/3_christmas_studio_2-min.jpg',
-//   },
-//   {
-//     img: 'backgrounds/4_circus_arena.hdr',
-//     title: 'Circus',
-//     thumb: 'backgrounds/4_circus_arena-min.jpg',
-//   },
-//   {
-//     img: 'backgrounds/5_colourful_studio.hdr',
-//     title: 'Colourful studio',
-//     thumb: 'backgrounds/5_colourful_studio-min.jpg',
-//   },
-//   {
-//     img: 'backgrounds/6_fireplace.hdr',
-//     title: 'fireplace',
-//     thumb: 'backgrounds/6_fireplace-min.jpg',
-//   },
-//   {
-//     img: 'backgrounds/7_moonless_golf.hdr',
-//     title: 'moonless golf',
-//     thumb: 'backgrounds/7_moonless_golf-min.jpg',
-//   },
-//   {
-//     img: 'backgrounds/8_shanghai_bund.hdr',
-//     title: 'Shanghai',
-//     thumb: 'backgrounds/8_shanghai_bund-min.jpg',
-//   },
-//   {
-//     img: 'backgrounds/9_snowy_cemetery.hdr',
-//     title: 'Snowy Cemetery',
-//     thumb: 'backgrounds/9_snowy_cemetery-min.jpg',
-//   },
-//   {
-//     img: 'backgrounds/10_solitude_night.hdr',
-//     title: 'solitude night',
-//     thumb: 'backgrounds/10_solitude_night-min.jpg',
-//   },
-//   {
-//     img: 'backgrounds/11_st_fagans_interior.hdr',
-//     title: 'st fagans',
-//     thumb: 'backgrounds/11_st_fagans_interior-min.jpg',
-//   },
-//   {
-//     img: 'backgrounds/12_epping_forest.hdr',
-//     title: 'Epping Forest',
-//     thumb: 'backgrounds/12_epping_forest-min.jpg',
-//   },
-// ];
+const Plane = function (props) {
+  const [ref] = usePlane(() => ({ type: 'Static', ...props }));
+  return (
+    <mesh
+      ref={ref}
+      receiveShadow
+    >
+      {/* <planeBufferGeometry attach="geometry" args={[30, 30]} />
+      <meshStandardMaterial attach="material" color="white" /> */}
+    </mesh>
 
-// const Plane = function (props) {
-//   const [ref] = usePlane(() => ({ type: 'Static', ...props }));
-//   return (
-//     <mesh ref={ref} receiveShadow />
-//   );
-// };
+  );
+};
 
 const App = function () {
   const [diceShape, setDiceShape] = useState('D4');
@@ -112,9 +56,22 @@ const App = function () {
             frictionEquationRelaxation: 2,
           }}
           gravity={[0, -200, 0]}
-          // allowSleep={false}
         >
-          {/* <Plane rotation={[-Math.PI / 2, 0, 0]} position={[0, -60, 0]} /> */}
+          {/** back plane */}
+          <Plane rotation={[-Math.PI / 1, 0, 0]} position={[0, 0, 183]} />
+          {/** back left plane */}
+          <Plane rotation={[Math.PI / 1, 1.06, 0]} position={[-135, 0, 135]} />
+          {/** back right plane */}
+          <Plane rotation={[Math.PI / 1, 5.23, 0]} position={[135, 0, 135]} />
+          {/** front right plane */}
+          <Plane rotation={[Math.PI / 1, 4.19, 0]} position={[135, 0, -132]} />
+          {/** front plane */}
+          <Plane rotation={[Math.PI / 1, 3.13, 0]} position={[135, 0, -184]} />
+          {/** front left plane */}
+          <Plane rotation={[Math.PI / 1, 2.1, 0]} position={[-105, 0, -184]} />
+          {/* <Plane rotation={[Math.PI / 1, 0, 0]} position={[-183, 0, -183]} /> */}
+          {/** bottom plane */}
+          <Plane rotation={[-Math.PI / 2, 0, 0]} position={[0, -77, 0]} />
           {tray.trayEnabled ? <Tray material={tray} /> : null}
           <Dice
             diceShape={diceShape}
