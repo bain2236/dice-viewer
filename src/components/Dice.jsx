@@ -12,20 +12,20 @@ import toConvexProps, { getDiceRefs } from '../utilities';
 const Dice = function ({
   diceShape, material, environment, animation,
 }) {
-  const [doZeroVelocity, ref, api, geometry, symbols, walls] = getDiceRefs(diceShape);
+  const [velocityOn, ref, api, geometry, symbols, walls] = getDiceRefs(diceShape);
 
   useControls('Dice', {
     Reset: button(() => {
       api.position.set(0, 0, 0);
       api.rotation.set(0, 0, 0);
-      doZeroVelocity.current = true;
+      if (velocityOn.current) velocityOn.current = !velocityOn.current;
       api.velocity.set(0, 0, 0);
       api.mass.set(0);
     }),
   });
 
   useFrame(() => {
-    if (doZeroVelocity && animation.rotate) {
+    if (!velocityOn && animation.rotate) {
       console.log(ref);
       api.rotation.set(
         animation.axis.x,
@@ -41,7 +41,7 @@ const Dice = function ({
     //   ref.current.position.z = 0;
     }
     // eslint-disable-next-line no-unused-expressions
-    doZeroVelocity.current && api.velocity.set(0, 0, 0);
+    velocityOn.current && api.velocity.set(0, 0, 0);
 
     return null;
   });
@@ -52,7 +52,8 @@ const Dice = function ({
       dispose={null}
       castShadow
       onClick={(e) => {
-        doZeroVelocity.current = !doZeroVelocity.current;
+        if (velocityOn.current) velocityOn.current = !velocityOn.current;
+
         api.mass.set(50);
 
         e.stopPropagation();

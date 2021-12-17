@@ -22,7 +22,7 @@ const toConvexProps = (bufferGeometry) => {
 const getDiceRefs = (diceShape) => {
   const { nodes } = useGLTF(`/${diceShape.toLowerCase()}.glb`);
 
-  const doZeroVelocity = useRef(true);
+  const velocityOn = useRef(false);
   const geo = useMemo(() => toConvexProps(nodes[diceShape].geometry), [nodes]);
 
   const [ref, api] = useConvexPolyhedron(() => ({
@@ -33,7 +33,7 @@ const getDiceRefs = (diceShape) => {
   const symbols = nodes[`${diceShape}symbols`].geometry;
   const walls = nodes[`${diceShape}walls`].geometry;
 
-  return [doZeroVelocity, ref, api, geometry, symbols, walls];
+  return [velocityOn, ref, api, geometry, symbols, walls];
 };
 
 const getControls = (setDiceShape) => {
