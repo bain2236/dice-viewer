@@ -1,9 +1,7 @@
 import { useConvexPolyhedron } from '@react-three/cannon';
 import { useGLTF } from '@react-three/drei';
-import {
-  button, buttonGroup, folder, useControls,
-} from 'leva';
-import { useMemo, useRef } from 'react';
+import { buttonGroup, folder, useControls } from 'leva';
+import { useEffect, useMemo, useRef } from 'react';
 import { Geometry } from 'three-stdlib';
 
 /**
@@ -54,6 +52,7 @@ const getControls = (setDiceShape) => {
     environment: folder(
       {
         backgrounds: {
+          value: 'backgrounds/1_abandoned_greenhouse.hdr',
           options: {
             Greenhouse: 'backgrounds/1_abandoned_greenhouse.hdr',
             Christmas1: 'backgrounds/2_christmas_studio_1.hdr',
@@ -68,6 +67,7 @@ const getControls = (setDiceShape) => {
             St_Fagans: 'backgrounds/11_st_fagans_interior.hdr',
             Epping_forest: 'backgrounds/12_epping_forest.hdr',
           },
+          // onChange: () => console.log('did a thing'),
         },
         thickness: { value: 5, min: 0, max: 20 },
         roughness: {
@@ -86,7 +86,7 @@ const getControls = (setDiceShape) => {
           value: 1.25, min: 1, max: 2.3, step: 0.05,
         },
         envMapIntensity: {
-          value: 25, min: 0, max: 100, step: 1,
+          value: 25, min: 0, max: 100, step: 1, onChange: () => console.log('did a thing'),
         },
 
         attenuationTint: '#ffe79e',

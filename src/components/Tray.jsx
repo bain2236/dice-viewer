@@ -1,10 +1,12 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import { useGLTF } from '@react-three/drei';
+
+import PropTypes from 'prop-types';
 
 const Tray = function ({ material }) {
   const { nodes } = useGLTF('/tray.glb');
 
-  console.log(material);
   return (
     <group
       scale={3}
@@ -75,5 +77,9 @@ const Tray = function ({ material }) {
 };
 
 useGLTF.preload('/tray.glb');
+
+Tray.propTypes = {
+  material: PropTypes.object.isRequired,
+};
 
 export default Tray;
