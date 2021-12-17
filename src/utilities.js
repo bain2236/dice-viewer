@@ -47,7 +47,6 @@ const getControls = (setDiceShape) => {
       D20: () => { setDiceShape('D20'); },
       D100: () => { setDiceShape('D100'); },
     }),
-    Reset: button(() => alert('click')),
   });
 
   const environment = useControls({

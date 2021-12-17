@@ -5,6 +5,8 @@ import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import React, { useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { button, useControls } from 'leva';
+import { EditOffRounded } from '@mui/icons-material';
 import toConvexProps, { getDiceRefs } from '../utilities';
 
 const Dice = function ({
@@ -12,10 +14,21 @@ const Dice = function ({
 }) {
   const [doZeroVelocity, ref, api, geometry, symbols, walls] = getDiceRefs(diceShape);
 
+  useControls('Dice', {
+    Reset: button(() => {
+      api.position.set(0, 0, 0);
+      api.rotation.set(0, 0, 0);
+      doZeroVelocity.current = true;
+      api.velocity.set(0, 0, 0);
+      api.mass.set(0);
+    }),
+  });
+
   useFrame(() => {
-    if (!doZeroVelocity && animation.rotate) {
+    if (doZeroVelocity && animation.rotate) {
+      console.log(ref);
       api.rotation.set(
-        ref.current.rotation.x + animation.axis.x,
+        animation.axis.x,
         ref.current.rotation.y + animation.axis.y,
         ref.current.rotation.z + animation.axis.z,
       );
