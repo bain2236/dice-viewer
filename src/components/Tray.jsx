@@ -1,7 +1,5 @@
-import React, { useMemo, useRef } from 'react';
+import React from 'react';
 import { useGLTF } from '@react-three/drei';
-import { useConvexPolyhedron } from '@react-three/cannon';
-import toConvexProps from '../utilities';
 
 const Tray = function ({ material }) {
   const { nodes } = useGLTF('/tray.glb');

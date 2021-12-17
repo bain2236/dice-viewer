@@ -1,119 +1,51 @@
 /* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/jsx-props-no-spreading */
-import React, { useMemo, useRef } from 'react';
-import PropTypes from 'prop-types';
-import {
-  useGLTF,
-} from '@react-three/drei';
+import { animated } from '@react-spring/three';
+import { useConvexPolyhedron } from '@react-three/cannon';
+import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useBox, useConvexPolyhedron, useSphere } from '@react-three/cannon';
-import { Geometry } from 'three-stdlib';
+import React, { useEffect, useMemo, useRef } from 'react';
+import PropTypes from 'prop-types';
+import toConvexProps, { getDiceRefs } from '../utilities';
 
 const Dice = function ({
   diceShape, material, environment, animation,
 }) {
-  let geometry;
-  let symbols;
-  let walls;
-  let diceGroupRef;
-  // const [group] = useBox(() => ({ mass: 1, position: [0, 5, 0] }));
-  // const position = [0, 20, 0];
-  // const diceGroupRef = useRef();
-  // const [diceGroupRef] = useBox(() => ({
-  //   mass: 5, position: [0, 40, 0], rotation: [0, 0, 0], args: [8, 8, 8],
-  // }));
-
-  /**
- * Returns legacy geometry vertices, faces for ConvP
- * @param {THREE.BufferGeometry} bufferGeometry
- */
-  function toConvexProps(bufferGeometry) {
-    const geo = new Geometry().fromBufferGeometry(bufferGeometry);
-    // Merge duplicate vertices resulting from glTF export.
-    // Cannon assumes contiguous, closed meshes to work
-    geo.mergeVertices();
-    return [geo.vertices.map((v) => [v.x, v.y, v.z]),
-      geo.faces.map((f) => [f.a, f.b, f.c]), []]; // prettier-ignore
-  }
-
-  switch (diceShape) {
-    case 'D4': {
-      const { nodes } = useGLTF('/d4.glb');
-      const geo = useMemo(() => toConvexProps(nodes[diceShape].geometry), [nodes]);
-      [diceGroupRef] = useConvexPolyhedron(() => ({ mass: 5, args: geo }));
-
-      geometry = nodes[diceShape].geometry;
-      symbols = nodes[`${diceShape}symbols`].geometry;
-      walls = nodes[`${diceShape}walls`].geometry;
-    }
-      break;
-    case 'D6': {
-      const { nodes } = useGLTF('/d6.glb');
-      geometry = nodes[diceShape].geometry;
-      symbols = nodes[`${diceShape}symbols`].geometry;
-      walls = nodes[`${diceShape}walls`].geometry;
-    }
-      break;
-    case 'D8': {
-      const { nodes } = useGLTF('/d8.glb');
-      geometry = nodes[diceShape].geometry;
-      symbols = nodes[`${diceShape}symbols`].geometry;
-      walls = nodes[`${diceShape}walls`].geometry;
-    }
-      break;
-    case 'D10': {
-      const { nodes } = useGLTF('/d10.glb');
-      geometry = nodes[diceShape].geometry;
-      symbols = nodes[`${diceShape}symbols`].geometry;
-      walls = nodes[`${diceShape}walls`].geometry;
-    }
-      break;
-    case 'D12': {
-      const { nodes } = useGLTF('/d12.glb');
-      geometry = nodes[diceShape].geometry;
-      symbols = nodes[`${diceShape}symbols`].geometry;
-      walls = nodes[`${diceShape}walls`].geometry;
-    }
-      break;
-    case 'D20': {
-      const { nodes } = useGLTF('/d20.glb');
-      geometry = nodes[diceShape].geometry;
-      symbols = nodes[`${diceShape}symbols`].geometry;
-      walls = nodes[`${diceShape}walls`].geometry;
-    }
-      break;
-    case 'D100': {
-      const { nodes } = useGLTF('/d100.glb');
-      geometry = nodes[diceShape].geometry;
-      symbols = nodes[`${diceShape}symbols`].geometry;
-      walls = nodes[`${diceShape}walls`].geometry;
-    }
-      break;
-
-    default:
-      break;
-  }
+  const [doZeroVelocity, ref, api, geometry, symbols, walls] = getDiceRefs(diceShape);
 
   useFrame(() => {
-    if (animation.rotate) {
-      diceGroupRef.current.rotation.x += animation.axis.x;
-      diceGroupRef.current.rotation.y += animation.axis.y;
-      diceGroupRef.current.rotation.z += animation.axis.z;
+    if (!doZeroVelocity && animation.rotate) {
+      api.rotation.set(
+        ref.current.rotation.x + animation.axis.x,
+        ref.current.rotation.y + animation.axis.y,
+        ref.current.rotation.z + animation.axis.z,
+      );
+    //   ref.current.mass = 0;
+    //   ref.current.rotation.x += animation.axis.x;
+    //   ref.current.rotation.y += animation.axis.y;
+    //   ref.current.rotation.z += animation.axis.z;
+    //   ref.current.position.x = 0;
+    //   ref.current.position.y = 0;
+    //   ref.current.position.z = 0;
     }
+    // eslint-disable-next-line no-unused-expressions
+    doZeroVelocity.current && api.velocity.set(0, 0, 0);
+
     return null;
   });
 
   return (
     <group
-      ref={diceGroupRef}
+      ref={ref}
       dispose={null}
       castShadow
       onClick={(e) => {
-        console.log('touch the dice');
+        doZeroVelocity.current = !doZeroVelocity.current;
+        api.mass.set(50);
+
         e.stopPropagation();
       }}
     >
-      <mesh
+      <animated.mesh
         castShadow
         geometry={geometry}
       >
@@ -131,8 +63,8 @@ const Dice = function ({
           wireframe={material.wireframe}
           metalness={material.metal}
         />
-      </mesh>
-      <mesh
+      </animated.mesh>
+      <animated.mesh
         castShadow
         geometry={symbols}
       >
@@ -150,8 +82,8 @@ const Dice = function ({
           color={material.numberColor}
           metalness={material.metal}
         />
-      </mesh>
-      <mesh
+      </animated.mesh>
+      <animated.mesh
         castShadow
         geometry={walls}
       >
@@ -169,21 +101,12 @@ const Dice = function ({
           color={material.wallColor}
           metalness={material.metal}
         />
-      </mesh>
+      </animated.mesh>
     </group>
   );
 };
 
-useGLTF.preload('/d4.glb');
-useGLTF.preload('/d6.glb');
-useGLTF.preload('/d10.glb');
-useGLTF.preload('/d8.glb');
-useGLTF.preload('/d12.glb');
-useGLTF.preload('/d20.glb');
-useGLTF.preload('/d100.glb');
-
 Dice.propTypes = {
-  diceShape: PropTypes.object.isRequired,
   material: PropTypes.object.isRequired,
   environment: PropTypes.object.isRequired,
   animation: PropTypes.object.isRequired,
