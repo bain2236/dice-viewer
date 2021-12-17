@@ -2,14 +2,20 @@ import React, { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Environment, OrbitControls, softShadows } from '@react-three/drei';
 import {
-  useControls, buttonGroup, folder,
+  useControls, buttonGroup, folder, button,
 } from 'leva';
 import {
-  Physics, useBox, usePlane, useSphere,
+  Physics, useBox, usePlane,
 } from '@react-three/cannon';
-import Dice from './components/Dice';
 import Loader from './components/Loader';
 import Tray from './components/Tray';
+import D4 from './components/D4';
+import D6 from './components/D6';
+import D8 from './components/D8';
+import D10 from './components/D10';
+import D12 from './components/D12';
+import D20 from './components/D20';
+import D100 from './components/D100';
 
 softShadows();
 
@@ -76,24 +82,10 @@ const backgrounds = [
   },
 ];
 
-const Cube = function (props) {
-  const [ref] = useBox(() => ({
-    mass: 5, position: [30, 10, 0], rotation: [0, 0, 0], args: [10, 10, 10],
-  }));
-  return (
-    <mesh ref={ref} scale={12}>
-      <boxGeometry />
-      <meshPhysicalMaterial color="red" />
-    </mesh>
-  );
-};
-
 const Plane = function (props) {
-  const [ref] = useBox(() => ({ rotation: [-Math.PI / 2, 0, 0], args: [100, 100], ...props }));
+  const [ref] = usePlane(() => ({ type: 'Static', ...props }));
   return (
-    <mesh ref={ref}>
-      <planeGeometry args={[100, 100]} />
-    </mesh>
+    <mesh ref={ref} receiveShadow />
   );
 };
 
@@ -109,7 +101,9 @@ const App = function () {
       D20: () => { setDiceShape('D20'); },
       D100: () => { setDiceShape('D100'); },
     }),
+    Reset: button(() => alert('click')),
   });
+
   const environment = useControls({
     enabled: { value: false, label: 'Environment' },
     environment: folder(
@@ -187,7 +181,7 @@ const App = function () {
   });
 
   const animation = useControls('animation', {
-    rotate: false,
+    rotate: true,
     axis: {
       x: 0,
       y: 0.01,
@@ -195,20 +189,88 @@ const App = function () {
     },
   });
 
+  const diceRender = () => {
+    switch (diceShape) {
+      case 'D4':
+        return (
+          <D4
+            diceShape={diceShape}
+            material={material}
+            environment={environment}
+            animation={animation}
+          />
+        );
+      case 'D6':
+        return (
+          <D6
+            diceShape={diceShape}
+            material={material}
+            environment={environment}
+            animation={animation}
+          />
+        );
+      case 'D8':
+        return (
+          <D8
+            diceShape={diceShape}
+            material={material}
+            environment={environment}
+            animation={animation}
+          />
+        );
+      case 'D10':
+        return (
+          <D10
+            diceShape={diceShape}
+            material={material}
+            environment={environment}
+            animation={animation}
+          />
+        );
+      case 'D12':
+        return (
+          <D12
+            diceShape={diceShape}
+            material={material}
+            environment={environment}
+            animation={animation}
+          />
+        );
+      case 'D20':
+        return (
+          <D20
+            diceShape={diceShape}
+            material={material}
+            environment={environment}
+            animation={animation}
+          />
+        );
+      case 'D100':
+        return (
+          <D100
+            diceShape={diceShape}
+            material={material}
+            environment={environment}
+            animation={animation}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <Canvas
       shadows
       colorManagement
-      // dpr={[1, 2]}
-      // gl={{ alpha: false }}
       camera={{ position: [0, 40, 50], fov: 70 }}
-      // shadowMap
     >
       <directionalLight
         intensity={0.5}
         castShadow
         shadow-mapSize-height={512}
         shadow-mapSize-width={512}
+        position={[0, 50, 100]}
       />
       <Suspense fallback={<Loader />}>
         <Physics
@@ -222,19 +284,12 @@ const App = function () {
             frictionEquationStiffness: 1e7,
             frictionEquationRelaxation: 2,
           }}
-          gravity={[0, -40, 0]}
-          allowSleep={false}
+          gravity={[0, -200, 0]}
+          // allowSleep={false}
         >
-          <Dice
-            diceShape={diceShape}
-            material={material}
-            environment={environment}
-            animation={animation}
-          />
-          <Cube />
-          <Plane />
-          {/* {tray.trayEnabled ? <Tray material={tray} /> : null} */}
-
+          <Plane rotation={[-Math.PI / 2, 0, 0]} position={[0, -60, 0]} />
+          {tray.trayEnabled ? <Tray material={tray} /> : null}
+          {diceRender()}
           {/* eslint-disable-next-line react/jsx-props-no-spreading */}
           {environment.enabled
             ? (

@@ -1,12 +1,13 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   useGLTF,
 } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useBox, useSphere } from '@react-three/cannon';
+import { useBox, useConvexPolyhedron, useSphere } from '@react-three/cannon';
+import { Geometry } from 'three-stdlib';
 
 const Dice = function ({
   diceShape, material, environment, animation,
@@ -14,16 +15,33 @@ const Dice = function ({
   let geometry;
   let symbols;
   let walls;
+  let diceGroupRef;
   // const [group] = useBox(() => ({ mass: 1, position: [0, 5, 0] }));
   // const position = [0, 20, 0];
   // const diceGroupRef = useRef();
-  const [diceGroupRef] = useBox(() => ({
-    mass: 5, position: [0, 40, 0], rotation: [0, 0, 0], args: [10, 10, 10],
-  }));
+  // const [diceGroupRef] = useBox(() => ({
+  //   mass: 5, position: [0, 40, 0], rotation: [0, 0, 0], args: [8, 8, 8],
+  // }));
+
+  /**
+ * Returns legacy geometry vertices, faces for ConvP
+ * @param {THREE.BufferGeometry} bufferGeometry
+ */
+  function toConvexProps(bufferGeometry) {
+    const geo = new Geometry().fromBufferGeometry(bufferGeometry);
+    // Merge duplicate vertices resulting from glTF export.
+    // Cannon assumes contiguous, closed meshes to work
+    geo.mergeVertices();
+    return [geo.vertices.map((v) => [v.x, v.y, v.z]),
+      geo.faces.map((f) => [f.a, f.b, f.c]), []]; // prettier-ignore
+  }
 
   switch (diceShape) {
     case 'D4': {
       const { nodes } = useGLTF('/d4.glb');
+      const geo = useMemo(() => toConvexProps(nodes[diceShape].geometry), [nodes]);
+      [diceGroupRef] = useConvexPolyhedron(() => ({ mass: 5, args: geo }));
+
       geometry = nodes[diceShape].geometry;
       symbols = nodes[`${diceShape}symbols`].geometry;
       walls = nodes[`${diceShape}walls`].geometry;
@@ -93,7 +111,6 @@ const Dice = function ({
       onClick={(e) => {
         console.log('touch the dice');
         e.stopPropagation();
-        diceGroupRef.current.mass = 5;
       }}
     >
       <mesh
