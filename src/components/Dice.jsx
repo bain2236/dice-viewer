@@ -1,19 +1,19 @@
 /* eslint-disable react/forbid-prop-types */
 import { animated } from '@react-spring/three';
-import { useConvexPolyhedron } from '@react-three/cannon';
-import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { button, useControls } from 'leva';
-import { EditOffRounded } from '@mui/icons-material';
-import toConvexProps, { getDiceRefs } from '../utilities';
+import { getDiceRefs } from '../utilities';
 
 const Dice = function ({
-  diceShape, material, environment, animation,
+
+  diceShape,
+  material,
+  environment,
+  animation,
 }) {
   const [velocityOn, ref, api, geometry, symbols, walls] = getDiceRefs(diceShape);
-
   useControls('Dice', {
     Reset: button(() => {
       api.position.set(0, 0, 0);
@@ -26,23 +26,19 @@ const Dice = function ({
   });
 
   useFrame(() => {
-    if (!velocityOn && animation.rotate) {
-      console.log(ref);
-      api.rotation.set(
+    if (!velocityOn.current && animation.rotate) {
+      api.angularVelocity.set(
         animation.axis.x,
-        ref.current.rotation.y + animation.axis.y,
-        ref.current.rotation.z + animation.axis.z,
+        animation.axis.y,
+        animation.axis.z,
       );
-    //   ref.current.mass = 0;
-    //   ref.current.rotation.x += animation.axis.x;
-    //   ref.current.rotation.y += animation.axis.y;
-    //   ref.current.rotation.z += animation.axis.z;
-    //   ref.current.position.x = 0;
-    //   ref.current.position.y = 0;
-    //   ref.current.position.z = 0;
     }
+    if (!velocityOn.current && !animation.rotate) {
+      api.angularVelocity.set(0, 0, 0);
+    }
+
     // eslint-disable-next-line no-unused-expressions
-    velocityOn.current && api.velocity.set(0, 0, 0);
+    !velocityOn.current && api.velocity.set(0, 0, 0);
 
     return null;
   });
@@ -53,9 +49,12 @@ const Dice = function ({
       dispose={null}
       castShadow
       onClick={(e) => {
-        if (velocityOn.current) velocityOn.current = !velocityOn.current;
-
-        api.mass.set(50);
+        if (!velocityOn.current) velocityOn.current = !velocityOn.current;
+        api.mass.set(1);
+        const x = Math.random() * (150 - -150) + -150;
+        const y = Math.random() * (150 - -150) + -150;
+        const z = Math.random() * (150 - -150) + -150;
+        api.applyImpulse([x, y, z], [0, 0, 0]);
 
         e.stopPropagation();
       }}
@@ -122,6 +121,7 @@ const Dice = function ({
 };
 
 Dice.propTypes = {
+  diceShape: PropTypes.string.isRequired,
   material: PropTypes.object.isRequired,
   environment: PropTypes.object.isRequired,
   animation: PropTypes.object.isRequired,
