@@ -75,12 +75,12 @@ softShadows();
 //   },
 // ];
 
-const Plane = function (props) {
-  const [ref] = usePlane(() => ({ type: 'Static', ...props }));
-  return (
-    <mesh ref={ref} receiveShadow />
-  );
-};
+// const Plane = function (props) {
+//   const [ref] = usePlane(() => ({ type: 'Static', ...props }));
+//   return (
+//     <mesh ref={ref} receiveShadow />
+//   );
+// };
 
 const App = function () {
   const [diceShape, setDiceShape] = useState('D4');
@@ -114,7 +114,7 @@ const App = function () {
           gravity={[0, -200, 0]}
           // allowSleep={false}
         >
-          <Plane rotation={[-Math.PI / 2, 0, 0]} position={[0, -60, 0]} />
+          {/* <Plane rotation={[-Math.PI / 2, 0, 0]} position={[0, -60, 0]} /> */}
           {tray.trayEnabled ? <Tray material={tray} /> : null}
           <Dice
             diceShape={diceShape}

@@ -21,6 +21,7 @@ const Dice = function ({
       if (velocityOn.current) velocityOn.current = !velocityOn.current;
       api.velocity.set(0, 0, 0);
       api.mass.set(0);
+      api.angularVelocity.set(0, 0, 0);
     }),
   });
 
